@@ -1046,6 +1046,7 @@ class RegressionSepFNP(nn.Module):
         # get U
         pu_mean_all, pu_logscale_all = torch.split(self.p_u(H_all), self.dim_u, dim=1)
         pu = Normal(pu_mean_all, pu_logscale_all)
+        # sampling of embeddings u
         u = pu.rsample()
 
         # get G

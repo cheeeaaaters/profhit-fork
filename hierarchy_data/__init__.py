@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+from itertools import accumulate
 
 class TSNode(object):
     def __init__(self, idx, name, parent) -> None:
@@ -40,6 +40,43 @@ class LabourHierarchyData(object):
             nodes[idx_dict[parent_name]].children.append(curr_node)
         return data.T, idx_dict, nodes
 
+class CustomHierarchyData(object):
+    """
+    Defines a Hierarchical Dataset
+    """
+
+    def __init__(self, data_file="data/custom/refined_processed_246stk_intraday.gzip.csv") -> None:
+        self.data_file = data_file
+        self.data, self.idx_dict, self.nodes, self.shapes = self.get_hierarchy()
+
+    def get_hierarchy(self):
+        df = pd.read_csv(self.data_file, header=0, parse_dates=[0], index_col=0)
+        df.sort_index(ascending=True, inplace=True)
+        dates = np.unique(df.index.date)
+        shapes = [df[str(date)].shape[0] for date in dates]
+        shapes = list(accumulate(shapes))
+        shapes.insert(0, 0)
+
+        data = df.values
+        data = np.array([np.array(x, dtype=np.float32) for x in data])
+        titles = df.columns.values[1:]
+        titles = [x[1:-1] for x in titles]
+        titles = [x.replace("'", "").split(",") for x in titles]
+        titles = [[y.strip() for y in x] for x in titles]
+        nodes = [TSNode(0, "Total", None)]
+        idx_dict = {"Total": 0}
+        for n, t in enumerate(titles):
+            idx_dict["_".join(t)] = n + 1
+            if len(t) > 1:
+                parent_name = "_".join(t[:-1])
+            else:
+                parent_name = "Total"
+            if parent_name not in idx_dict:
+                print(idx_dict[parent_name])
+            curr_node = TSNode(n + 1, "_".join(t), nodes[idx_dict[parent_name]])
+            nodes.append(curr_node)
+            nodes[idx_dict[parent_name]].children.append(curr_node)
+        return data.T, idx_dict, nodes, shapes
 
 class TourismHierarchyData(object):
     def __init__(self, data_file="data/tourismlarge/data.csv") -> None:
