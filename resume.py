@@ -140,7 +140,7 @@ def pre_validate(sample=False, val_it=100):
         losses = []
 
 
-''''''
+'''
 print("Pretraining...")
 pretrain_iterations_per_step = 100
 pretrain_counter = 0
@@ -166,6 +166,7 @@ for ep in tqdm(range(PRE_TRAIN_EPOCHS)):
             th.save(decoder.state_dict(), f'output/custom/decoder_pretrain_{pretrain_counter}_{loss}.pt')
         except StopIteration:
             break
+'''
 
 corem = Corem(nodes=len(data_obj.idx_dict), c=C, ).to(device)
 
@@ -268,6 +269,8 @@ def validate(sample=False, val_it=100):
         yield np.mean(losses)
         losses = []
 
+encoder.load_state_dict(th.load('output/custom/encoder_pretrain_32300_2.161266565322876.pt'))
+decoder.load_state_dict(th.load('output/custom/decoder_pretrain_32300_2.161266565322876.pt'))
 
 train_iterations_per_step = 100
 train_counter = 0
