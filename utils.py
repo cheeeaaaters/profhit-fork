@@ -15,7 +15,7 @@ def lag_dataset_2(seqs, shapes, ref_back, train_back):
         ref = seqs[:, shapes[j - ref_back]:shapes[j]]
         seq = seqs[:, shapes[j]:shapes[j + 1]]
         for i in range(train_back, seq.shape[1]):
-            X.append(seqs[:, :i - 1])
-            Y.append(seqs[:, i])
+            X.append(seq[:, :i - 1])
+            Y.append(seq[:, i])
             R.append(ref)
     return R, X, Y

@@ -269,8 +269,11 @@ def validate(sample=False, val_it=100):
         yield np.mean(losses)
         losses = []
 
-encoder.load_state_dict(th.load('output/custom/encoder_pretrain_32300_2.161266565322876.pt'))
-decoder.load_state_dict(th.load('output/custom/decoder_pretrain_32300_2.161266565322876.pt'))
+#encoder.load_state_dict(th.load('output/custom/encoder_pretrain_32300_2.161266565322876.pt'))
+#decoder.load_state_dict(th.load('output/custom/decoder_pretrain_32300_2.161266565322876.pt'))
+encoder.load_state_dict(th.load('output/custom/encoder_train_32300_0.009501314722001553.pt'))
+decoder.load_state_dict(th.load('output/custom/decoder_train_32300_0.009501314722001553.pt'))
+corem.load_state_dict(th.load('output/custom/corem_train_32300_0.009501314722001553.pt'))
 
 train_iterations_per_step = 100
 train_counter = 0
@@ -281,11 +284,11 @@ for ep in tqdm(range(TRAIN_EPOCHS)):
     while True:
         try:
             print("----------------------------------------")
-            encoder.train()
-            decoder.train()
-            corem.train()
-            loss = next(train_gen)
-            print(f"Epoch {ep} loss: {loss}")
+            #encoder.train()
+            #decoder.train()
+            #corem.train()
+            #loss = next(train_gen)
+            #print(f"Epoch {ep} loss: {loss}")
             with th.no_grad():
                 print("----------------------------------------")
                 encoder.eval()
